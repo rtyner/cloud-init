@@ -1,0 +1,26 @@
+#cloud-config
+users:
+  - name: rt
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC46tIROyL2ATBVOWMKY/snKFc+zICMxwgPvmV9OZ1bnIjawywYTlbnRpKxv/ZogSbhPYFUCgeUY71t12VIRo69bYU+b7c7XQ3840gd8LztUmbfEQj+4giOSTTXknAclqIJ+dcK22LL36uyaEKEV6THL295I8mD35pcYzUylA8a2n1gx4ccRdfhhBxy46zB+uvgdcQFxUjIAGKZAPUl7yvLAhRshC1SqDzOPdu1czRdW5nR2hoL6HkALvPJJUvFo4gGraayWL7b3ch9aFynoL+uGRgwnXers+40RhYO6MJaPqgQS8VVHOKqJ5/4yhesxy/SvKrbpNLQXIrFQpKwcawl rusty@rt-arch
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDqAEp8pVCkvnLV+dLQ4SCOicO1ldShFO5W/tfV0BqMznrL/Ljc4uMlsgPf+LdiGHzTvEhuYvzfK+D8uP51AZnecusE8Bkk8B3eTrtnIJDnM+H/EiEHg5eSHI0aTAjNf2FfbGIgV6Xka1nzz6jPjD5Y+UNwzII7ihKtuMFUIrzk8uxRaG0Fkg382kQW8DgBn+jeFptbvyc9w2w6D1MDXS+wMYrrfesiQ6wZPDBQCInNRFzXXdzX6wIhhUuFoO0Un9p2dwJPznTDF8Ew6vl/l2uwX6qaqeLqsqv1JpkpmHC2JhFNM0v6ou+jKybAs19FoWDqlNs6bQrR5Afk+byczTgn rt@autoctl.rtynerlabs.xyz
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups: sudo
+    shell: /bin/bash
+runcmd:
+  - sed -i -e '/^Port/s/^.*$/Port 52199/' /etc/ssh/sshd_config
+  - sed -i -e '/^PermitRootLogin/s/^.*$/PermitRootLogin no/' /etc/ssh/sshd_config
+  - sed -i -e '$aAllowUsers rt' /etc/ssh/sshd_config
+  - restart ssh 
+  - su rt && ssh-keygen -t rsa -b 4096
+package_upgrade: true
+packages:
+  - python
+  - python-pip
+  - git
+  - zip
+  - wget
+  - curl
+  - vim
+  - tmux
+
